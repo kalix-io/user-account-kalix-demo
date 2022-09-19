@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package com.example.handle.domain;
+
+option java_outer_classname = "HandleDomain";
+
+message HandleState {
+  string handle = 1;
+  bool confirmed =  4;
+}

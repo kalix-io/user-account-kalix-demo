@@ -1,0 +1,49 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "kalix/annotations.proto";
+
+package com.example.user;
+
+option java_outer_classname = "UserApi";
+
+message CreateUser {
+  string user_id = 1 [(kalix.field).entity_key = true];
+  string full_name = 2;
+  string handle = 3;
+  string email =  4;
+}
+
+message ChangeHandleRequest {
+  string user_id = 1 [(kalix.field).entity_key = true];
+  string new_handle = 2;
+}
+
+message GetUser {
+  string user_id = 1 [(kalix.field).entity_key = true];
+}
+
+message User {
+  string full_name = 1;
+  string handle = 2;
+  string email =  3;
+}
+
+service UserService {
+  option (kalix.codegen) = {
+    event_sourced_entity: {
+      name: "com.example.user.domain.UserEntity"
+      entity_type: "user"
+      state: "com.example.user.domain.UserState"
+      events: [
+        "com.example.user.domain.UserCreated",
+        "com.example.user.domain.HandleChanged"]
+    }
+  };
+  option (kalix.service).acl.allow = { principal: ALL };
+
+  rpc Create(CreateUser) returns (google.protobuf.Empty);
+  rpc ChangeHandle(ChangeHandleRequest) returns (google.protobuf.Empty);
+  rpc Get(GetUser) returns (User);
+}

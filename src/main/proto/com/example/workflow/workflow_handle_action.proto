@@ -1,0 +1,28 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
+import "kalix/annotations.proto";
+import "com/example/handle/domain/handle_domain.proto";
+
+package com.example.workflow;
+
+option java_outer_classname = "HandleWorkflowActionApi";
+
+service HandleWorkflowAction {
+  option (kalix.codegen) = {
+    action: {
+      name: "HandleWorkflow"
+    }
+  };
+
+  option (kalix.service).acl.allow = { principal: ALL };
+
+  rpc OnHandleChange(com.example.handle.domain.HandleState) returns (google.protobuf.Empty) {
+    option (kalix.method).eventing.in = {
+      value_entity: "handle"
+    };
+  }
+
+}

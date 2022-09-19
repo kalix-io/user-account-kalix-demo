@@ -1,0 +1,26 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "kalix/annotations.proto";
+
+package com.example.api;
+
+option java_outer_classname = "UserActionApi";
+
+message CreateUser {
+  string full_name = 2;
+  string handle = 3;
+  string email =  4;
+}
+
+message UserId {
+  string value = 1;
+}
+service UserActionService {
+  option (kalix.codegen) = {
+    action: { name : "UserAction" }
+  };
+  option (kalix.service).acl.allow = { principal: ALL };
+  rpc Create(CreateUser) returns (UserId);
+}

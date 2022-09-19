@@ -1,0 +1,34 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "kalix/annotations.proto";
+
+package com.example.handle;
+
+option java_outer_classname = "HandleApi";
+
+message Handle {
+  string handle_id = 1 [(kalix.field).entity_key = true];
+}
+
+message HandleStatus {
+  bool confirmed = 1;
+}
+
+service HandleService {
+  option (kalix.codegen) = {
+    value_entity: {
+      name: "com.example.handle.domain.HandleEntity"
+      entity_type: "handle"
+      state: "com.example.handle.domain.HandleState"
+    }
+  };
+  option (kalix.service).acl.allow = { principal: ALL };
+
+  rpc Reserve(Handle) returns (google.protobuf.Empty);
+  rpc Confirm(Handle) returns (google.protobuf.Empty);
+  rpc Expire(Handle) returns (google.protobuf.Empty);
+  rpc Delete(Handle) returns (google.protobuf.Empty);
+  rpc GetStatus(Handle) returns (HandleStatus);
+}

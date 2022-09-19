@@ -1,0 +1,40 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
+import "kalix/annotations.proto";
+import "com/example/user/domain/user_domain.proto";
+
+package com.example.workflow;
+
+option java_outer_classname = "UserWorkflowActionApi";
+
+service UserWorkflowAction {
+  option (kalix.codegen) = {
+    action: {
+      name: "UserWorkflow"
+    }
+  };
+
+  option (kalix.service).acl.allow = { principal: ALL };
+
+  rpc OnUserCreated(com.example.user.domain.UserCreated) returns (google.protobuf.Empty) {
+    option (kalix.method).eventing.in = {
+      event_sourced_entity: "user"
+    };
+  }
+
+  rpc OnHandleChanged(com.example.user.domain.HandleChanged) returns (google.protobuf.Empty) {
+    option (kalix.method).eventing.in = {
+      event_sourced_entity: "user"
+    };
+  }
+
+  rpc Ignore(google.protobuf.Any) returns (google.protobuf.Empty) {
+    option (kalix.method).eventing.in = {
+      event_sourced_entity: "user"
+      ignore: true
+    };
+  }
+}
