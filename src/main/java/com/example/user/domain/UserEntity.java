@@ -43,7 +43,8 @@ public class UserEntity extends AbstractUserEntity {
   }
 
   @Override
-  public Effect<Empty> changeHandle(UserDomain.UserState currentState, UserApi.ChangeHandleRequest changeHandleRequest) {
+  public Effect<Empty> changeHandle(UserDomain.UserState currentState,
+                                    UserApi.ChangeHandleRequest changeHandleRequest) {
 
     UserDomain.HandleChanged event =
         UserDomain.HandleChanged
@@ -69,7 +70,9 @@ public class UserEntity extends AbstractUserEntity {
   }
 
   @Override
-  public UserDomain.UserState userCreated(UserDomain.UserState currentState, UserDomain.UserCreated userCreated) {
+  public UserDomain.UserState userCreated(UserDomain.UserState currentState,
+                                          UserDomain.UserCreated userCreated) {
+
     return UserDomain.UserState.newBuilder()
         .setFullName(userCreated.getFullName())
         .setEmail(userCreated.getEmail())
@@ -78,7 +81,8 @@ public class UserEntity extends AbstractUserEntity {
   }
 
   @Override
-  public UserDomain.UserState handleChanged(UserDomain.UserState currentState, UserDomain.HandleChanged handleChanged) {
+  public UserDomain.UserState handleChanged(UserDomain.UserState currentState,
+                                            UserDomain.HandleChanged handleChanged) {
     return currentState.toBuilder().setHandle(handleChanged.getNewHandle()).build();
   }
 
